@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # Serviço da API PHP e do Apache
   app:
     build:
       context: ./backend
@@ -13,15 +14,27 @@ services:
     depends_on:
       - db
 
+  # Serviço do MySQL
   db:
     image: mysql:8.0
     container_name: mysql-db
     environment:
-      MYSQL_DATABASE: recrutamento
+      MYSQL_DATABASE: seu_banco_de_dados
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     volumes:
-      - db_data:/var/lib/mysql
+      - ./db_data:/var/lib/mysql
       - ./backend/database/banco.sql:/docker-entrypoint-initdb.d/banco.sql
+
+  # NOVO SERVIÇO: Servidor do Front-end (Nginx)
+  frontend:
+    image: nginx:stable-alpine
+    container_name: html-frontend
+    ports:
+      - "3000:80"  # O front-end será acessível na porta 3000
+    volumes:
+      - ./frontend:/usr/share/nginx/html # Monta a sua pasta de front-end
+    depends_on:
+      - app # Garante que a API esteja rodando antes
 
 volumes:
   db_data:
