@@ -18,10 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Recebe os dados do POST
 $data = json_decode(file_get_contents('php://input'), true);
 $email = $data['email'] ?? '';
-$password = $data['password'] ?? '';
+$senha = $data['senha'] ?? '';
 
 // Valida campos
-if (empty($email) || empty($password)) {
+if (empty($email) || empty($senha)) {
     echo json_encode([
         "success" => false,
         "message" => "Email e senha são obrigatórios"
@@ -41,8 +41,8 @@ if (!$Candidato) {
     exit;
 }
 
-// Verifica senha (assumindo que está armazenada com password_hash)
-if (!password_verify($password, $Candidato['password'])) {
+// Verifica senha (assumindo que está armazenada com senha_hash)
+if (!password_verify($senha, $Candidato->getSenha())) {
     echo json_encode([
         "success" => false,
         "message" => "Usuário ou senha incorretos"
@@ -51,7 +51,7 @@ if (!password_verify($password, $Candidato['password'])) {
 }
 
 // Se estiver correto, gera token (exemplo simples com base64)
-$token = base64_encode($Candidato['id'] . ':' . bin2hex(random_bytes(16)));
+$token = base64_encode($Candidato->getId() . ':' . bin2hex(random_bytes(16)));
 
 echo json_encode([
     "success" => true,

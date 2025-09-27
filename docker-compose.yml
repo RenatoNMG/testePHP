@@ -36,5 +36,6 @@ services:
     depends_on:
       - app # Garante que a API esteja rodando antes
 
+
 volumes:
   db_data:
