@@ -6,7 +6,7 @@ class Database
     {
 
         $host = 'localhost';
-        $db_name = 'gestao';
+        $db_name = 'recutamento';
         $username = 'root';
         $password = '';
         $conn = null;
