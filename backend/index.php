@@ -105,7 +105,7 @@ function testInscricaoDAO() {
     }
     echo "<br>";
 
-    // Atualizar (trocar vaga ou candidato)
+    // Atualizar
     $inscricoes[0]->setVagaId($vagas[0]->getId());
     $iDAO->update($inscricoes[0]);
     echo "[ATUALIZAR] Inscrição atualizada.<br><br>";
@@ -123,9 +123,68 @@ function testInscricaoDAO() {
     $vDAO->delete($vagas[0]->getId());
 }
 
+// Teste da API de login
+function testLoginAPI() {
+    printTitle("Teste API Login");
+
+    $cDAO = new CandidatoDAO();
+
+    // Criar candidato de teste
+    $c = new Candidato(null, "Login Teste", "login_teste@example.com", password_hash("senha123", PASSWORD_DEFAULT));
+    $cDAO->create($c);
+
+    $candidatos = $cDAO->getAll();
+    $user = end($candidatos); // Pega o último criado
+
+    // URL da API (ajuste conforme seu projeto)
+    $url = __DIR__ . "/api/login.php";
+
+    $data = [
+        "email" => $user->getEmail(),
+        "senha" => "senha123"
+    ];
+
+    $options = [
+        "http" => [
+            "header"  => "Content-Type: application/json\r\n",
+            "method"  => "POST",
+            "content" => json_encode($data)
+        ]
+    ];
+
+    $context  = stream_context_create($options);
+    $result = @file_get_contents($url, false, $context);
+
+    if ($result === FALSE) {
+        echo "Erro ao acessar API.<br>";
+    } else {
+        $response = json_decode($result, true);
+        if (is_array($response) && isset($response['success'])) {
+            if ($response['success']) {
+                echo "[LOGIN] Sucesso! Token: {$response['token']} | Nome: {$response['nome']}<br><br>";
+            } else {
+                echo "[LOGIN] Falha: {$response['message']}<br><br>";
+            }
+        } else {
+            echo "[LOGIN] Resposta inválida da API.<br><br>";
+        }
+    }
+
+    // Limpar candidato de teste
+    $cDAO->delete($user->getId());
+}
+
+require_once __DIR__ . '/database/database.php';
+require_once __DIR__ . '/dao/CandidatosDAO.php';
+
+$dao = new CandidatoDAO();
+$user = $dao->getByEmail('teste@email.com');
+var_dump($user);
+
 // Rodar todos os testes
 testCandidatoDAO();
 testVagaDAO();
 testInscricaoDAO();
+testLoginAPI();
 
 echo "=== FIM DOS TESTES ===<br><br>";

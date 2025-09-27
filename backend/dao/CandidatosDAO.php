@@ -82,4 +82,17 @@ class CandidatoDAO
         }
         return null;
     }
+
+    public function getByEmail(string $email): ?Candidato{
+        $sql = 'SELECT * FROM candidatos WHERE email = :email';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            'email'=> $email,
+            ]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return $this->mapCandidatoRow($row);
+            }
+            return null;
+    }
 }
