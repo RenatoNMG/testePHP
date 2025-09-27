@@ -5,8 +5,8 @@ class Database
     public static function getConnection()
     {
 
-        $host = 'localhost';
-        $db_name = 'recutamento';
+        $host = 'db';
+        $db_name = 'recrutamento';
         $username = 'root';
         $password = '';
         $conn = null;
