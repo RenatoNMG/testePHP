@@ -55,11 +55,15 @@ $candidato->setToken($token);
 // Salva no banco
 $CandidatosDAO = new CandidatoDAO();
 if ($CandidatosDAO->create($candidato)) {
+    // Pega o ID gerado pelo banco
+    $candidatoId = $candidato->getId();
     echo json_encode([
         "success" => true,
-        "token" => $token
+        "token" => $token,
+        "id" => $candidatoId
     ]);
-} else {
+}
+ else {
     echo json_encode([
         "success" => false,
         "message" => "Erro ao cadastrar. Email já existe?"

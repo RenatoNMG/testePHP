@@ -11,7 +11,7 @@ class VagaDAO
         $this->conn = Database::getConnection();
     }
 
-   private function mapVagaRow(array $row): Vaga
+    private function mapVagaRow(array $row): Vaga
     {
         return new Vaga(
             $row['id'],
@@ -22,6 +22,23 @@ class VagaDAO
             $row['criado_por'] ?? null // adiciona o ID do criador
         );
     }
+
+
+    // Dentro da classe VagaDAO
+    public function getByCriadoPor(int $candidatoId): array
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM vagas WHERE criado_por = :candidatoId ORDER BY titulo ASC");
+        $stmt->bindValue(':candidatoId', $candidatoId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $this->mapVagaRow($row);
+        }
+
+        return $result;
+    }
+
 
     // Criar nova vaga
     public function create(Vaga $vaga): bool

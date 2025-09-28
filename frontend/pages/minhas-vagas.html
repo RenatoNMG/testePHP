@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Vagas</title>
+    <link rel="stylesheet" href="../styles/layouts/vagas.css">
+</head>
+<body>
+    <!-- Botão voltar -->
+    
+
+    <h1>Minhas Vagas</h1>
+    <button><a href="vagas.html">Voltar</a></button>
+    <div class="jobs-list" id="jobs-list">
+        
+        <div class="job-card">
+            <div class="job-title">Desenvolvedor PHP</div>
+            <div class="job-desc">Vaga para trabalhar com Laravel e APIs REST.</div>
+            <div class="job-type">CLT</div>
+            <div class="job-actions">
+                <button class="edit-btn" onclick="editarVaga(1)">Editar</button>
+                <button class="delete-btn" onclick="apagarVaga(1)">Apagar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/auth.js"></script>
+    <script src="../services/minhas-vagas.js"></script>
+
+</body>
+</html>

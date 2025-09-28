@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descricao = $data['descricao'] ?? null;
     $tipo = $data['tipo'] ?? 'CLT';
     $status = $data['status'] ?? 'active';
-    $criado_por = $data['criado_por'] ?? null; // novo campo para o ID do candidato
+    $criado_por = $data['criado_por'] ?? null; 
 
     if (
         !$titulo || trim($titulo) === '' ||

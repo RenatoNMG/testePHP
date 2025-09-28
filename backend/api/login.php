@@ -67,5 +67,6 @@ $token = base64_encode($Candidato->getId() . ':' . bin2hex(random_bytes(16)));
 
 echo json_encode([
     "success" => true,
-    "token" => $token
+    "token" => $token,
+    "id" => $Candidato->getId()
 ]);

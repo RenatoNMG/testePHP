@@ -12,8 +12,7 @@ loginForm.addEventListener('submit', (event) => {
         senha: senha
     };
 
-    //Verifique se os dados estão sendo coletados corretamente
-    console.log('Dados do formulário coletados:', loginData);
+    
 
     fetch(apiURL, {
         method: 'POST',
@@ -23,7 +22,7 @@ loginForm.addEventListener('submit', (event) => {
         body: JSON.stringify(loginData)
     })
     .then(response => {
-        //Verifique a URL e o status da resposta
+        //URL e o status da resposta
         console.log('Resposta da API recebida. Status:', response.status);
         if (!response.ok) {
             throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
@@ -39,7 +38,7 @@ loginForm.addEventListener('submit', (event) => {
         
         localStorage.setItem('token', data.token);
         localStorage.setItem('candidato_id', data.id); 
-        localStorage.setItem('candidato_nome', data.nome);
+        
         
         window.location.href = '../pages/vagas.html';
     } else {

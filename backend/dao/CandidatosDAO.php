@@ -30,12 +30,20 @@ class CandidatoDAO
     {
         $sql = "INSERT INTO candidatos (nome, email, senha, token) VALUES (:nome, :email, :senha, :token)";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
+        $success = $stmt->execute([
             ':nome' => $candidato->getNome(),
             ':email' => $candidato->getEmail(),
             ':senha' => $candidato->getSenha(),
-            ':token' => $candidato->getToken()
+            ':token' => $candidato->getToken(),
+            
         ]);
+
+        if ($success) {
+
+            $candidato->setId($this->conn->lastInsertId());
+        }
+
+        return $success;
     }
 
     // Atualizar candidato

@@ -42,7 +42,6 @@ cadastroForm.addEventListener('submit', (event) => {
         // Salva token e ID do usuário no localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('candidato_id', data.id); 
-        localStorage.setItem('candidato_nome', data.nome); 
         
         window.location.href = '../pages/vagas.html';
     } else {
