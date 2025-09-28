@@ -1,16 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Vagas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Reset & Fonte ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f7;
+      color: #1c1c1e;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* ===== Header ===== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #1c1c1e;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0a84ff;
+    }
+
+    header nav a {
+      margin-left: 1rem;
+      background-color: #0a84ff;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    header nav a:hover {
+      background-color: #0066cc;
+    }
+
+    /* ===== Hero / Boas-vindas ===== */
+    .hero {
+      margin-top: 80px;
+      background-color: #e5e5ea;
+      text-align: center;
+      padding: 5rem 1rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #0a84ff;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #3a3a3c;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ===== Seções Explicativas ===== */
+    .sections {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 3rem 1rem;
+      gap: 2rem;
+      background-color: #f5f5f7;
+    }
+
+    .section-card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 2rem;
+      flex: 1 1 250px;
+      max-width: 300px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .section-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .section-card .icon {
+      font-size: 3rem;
+      color: #0a84ff;
+      margin-bottom: 1rem;
+    }
+
+    .section-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #1c1c1e;
+    }
+
+    .section-card p {
+      font-size: 1rem;
+      color: #636366;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      background-color: #2c2c2e;
+      color: #f5f5f7;
+      text-align: center;
+      padding: 1rem;
+      margin-top: auto;
+    }
+
+    /* ===== Responsividade ===== */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .sections {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <a href="auth/login.html">login</a>
-    <a href="auth/cadastro.html">Cadastrar</a>
+  <!-- Header -->
+  <header>
+    <div class="logo">JobConnect</div>
+    <nav>
+      <a href="auth/login.html">Login</a>
+      <a href="auth/cadastro.html">Cadastrar</a>
+    </nav>
+  </header>
 
-    
+  <!-- Hero / Boas-vindas -->
+  <section class="hero">
+    <h1>Bem-vindo ao JobConnect</h1>
+    <p>Conectamos candidatos talentosos às melhores oportunidades de emprego. Nosso objetivo é facilitar a busca de trabalho e o recrutamento de empresas de forma rápida e confiável.</p>
+  </section>
+
+  <!-- Seções Explicativas -->
+  <section class="sections">
+    <div class="section-card">
+      <div class="icon">👩‍💼</div>
+      <h2>Para Candidatos</h2>
+      <p>Crie seu perfil, encontre vagas compatíveis com suas habilidades e aplique de forma simples e direta.</p>
+    </div>
+    <div class="section-card">
+      <div class="icon">🏢</div>
+      <h2>Para Empresas</h2>
+      <p>Publique vagas, encontre candidatos qualificados e gerencie processos seletivos de forma eficiente.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 JobConnect - Conectando talentos e oportunidades.
+  </footer>
+
 </body>
 </html>
-
