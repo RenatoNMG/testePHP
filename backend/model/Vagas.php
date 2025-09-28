@@ -1,5 +1,5 @@
 <?php
-class Vaga
+class Vaga implements JsonSerializable
 {
     private ?int $id;
     private string $titulo;
@@ -63,5 +63,16 @@ class Vaga
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'titulo' => $this->titulo,
+            'descricao' => $this->descricao,
+            'tipo' => $this->tipo,
+            'status' => $this->status
+        ];
     }
 }

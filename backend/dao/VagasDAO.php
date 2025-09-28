@@ -4,13 +4,13 @@ require_once __DIR__ . "/../database/database.php";
 
 class VagaDAO
 {
-      private $conn;
+    private $conn;
 
     public function __construct()
     {
         $this->conn = Database::getConnection();
     }
-    
+
     private function mapVagaRow(array $row): Vaga
     {
         return new Vaga(
@@ -75,5 +75,26 @@ class VagaDAO
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? $this->mapVagaRow($row) : null;
+    }
+
+    public function getPaginated(int $page = 1, int $limit = 20): array
+    {
+        $offset = ($page - 1) * $limit;
+        $stmt = $this->conn->prepare("SELECT * FROM vagas ORDER BY titulo ASC LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $this->mapVagaRow($row);
+        }
+        return $result;
+    }
+
+    public function getTotal(): int
+    {
+        $stmt = $this->conn->query("SELECT COUNT(*) as total FROM vagas");
+        return (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
 }
