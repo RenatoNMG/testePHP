@@ -9,15 +9,15 @@ require_once __DIR__ . "/../database/database.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') exit;
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
+
     $data = json_decode(file_get_contents('php://input'), true);
 
     $titulo = $data['titulo'] ?? null;
     $descricao = $data['descricao'] ?? null;
     $tipo = $data['tipo'] ?? 'CLT';
     $status = $data['status'] ?? 'active';
+    $criado_por = $data['criado_por'] ?? null; // novo campo para o ID do candidato
 
     if (
         !$titulo || trim($titulo) === '' ||
@@ -30,9 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-
-    $vaga = new Vaga(null, $titulo, $descricao, $tipo, $status);
-
+    // Cria a vaga com o ID do candidato que criou
+    $vaga = new Vaga(null, $titulo, $descricao, $tipo, $status, $criado_por);
 
     $dao = new VagaDAO();
     $success = $dao->create($vaga);

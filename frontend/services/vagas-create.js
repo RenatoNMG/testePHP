@@ -1,26 +1,31 @@
 // Seleciona o formulário
 const vagaForm = document.getElementById('vaga-form');
-
-// URL da API de cadastro de vagas
 const apiURL = 'http://localhost:8080/api/create-vaga.php';
 
 vagaForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    
     const titulo = document.querySelector('input[name="titulo"]').value.trim();
     const descricao = document.querySelector('textarea[name="descricao"]').value.trim();
     const tipo = document.querySelector('select[name="tipo"]').value;
     const status = document.querySelector('select[name="status"]').value;
-
 
     if (!titulo || !descricao || !tipo || !status) {
         alert('Preencha todos os campos corretamente!');
         return;
     }
 
-    // Cria o objeto para enviar
-    const vagaData = { titulo, descricao, tipo, status };
+    // Pega o ID do candidato logado
+    const candidatoId = localStorage.getItem('candidato_id');
+
+    // Cria o objeto para enviar, incluindo o ID do criador
+    const vagaData = { 
+        titulo, 
+        descricao, 
+        tipo, 
+        status,
+        criado_por: candidatoId // <--- aqui enviamos o ID do candidato
+    };
 
     // Envia via fetch
     fetch(apiURL, {
@@ -32,9 +37,7 @@ vagaForm.addEventListener('submit', (event) => {
     .then(data => {
         if (data.success) {
             alert('Vaga criada com sucesso!');
-        
-            // vagaForm.reset();
-            window.location.href = 'vagas.html'; // caso queira redirecionar
+            window.location.href = 'vagas.html';
         } else if (data.error) {
             alert('Erro: ' + data.error);
         } else {

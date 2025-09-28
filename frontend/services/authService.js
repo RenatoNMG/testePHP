@@ -31,21 +31,22 @@ loginForm.addEventListener('submit', (event) => {
         return response.json();
     })
     .then(data => {
-        //Verifique o conteúdo da resposta da API
-        console.log('Dados da API:', data);
+    console.log('Dados da API:', data);
+    
+    if (data.success) {
+        alert('Login bem-sucedido! Bem-vindo(a)!');
         
-        if (data.success) {
-            alert('Login bem-sucedido! Bem-vindo(a)!');
-            localStorage.setItem('token', data.token);
-            window.location.href = '../pages/vagas.html';
-        } else {
-            alert('Erro no login: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Erro na requisição fetch:', error);
-        alert('Erro ao tentar conectar com o servidor.');
-    });
+        
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('candidato_id', data.id); 
+        localStorage.setItem('candidato_nome', data.nome);
+        
+        window.location.href = '../pages/vagas.html';
+    } else {
+        alert('Erro no login: ' + data.message);
+    }
+})
+
 });
 
 

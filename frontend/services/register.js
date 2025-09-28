@@ -38,18 +38,18 @@ cadastroForm.addEventListener('submit', (event) => {
         return response.json();
     })
     .then(data => {
+    if (data.success && data.token) {
+        // Salva token e ID do usuário no localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('candidato_id', data.id); 
+        localStorage.setItem('candidato_nome', data.nome); 
         
-        if (data.success && data.token) {
-            localStorage.setItem('token', data.token);
-            window.location.href = '../pages/vagas.html';
-        } else {
-            alert('Erro no cadastro: ' + (data.message || 'Erro desconhecido'));
-        }
-    })
-    .catch(error => {
-        console.error('Erro na requisição fetch:', error);
-        alert('Não foi possível conectar à API. Verifique o console.');
-    });
+        window.location.href = '../pages/vagas.html';
+    } else {
+        alert('Erro no cadastro: ' + (data.message || 'Erro desconhecido'));
+    }
+})
+
 });
 
 // Seleciona o campo de senha e o ícone de olho (seu código para a funcionalidade de mostrar a senha)

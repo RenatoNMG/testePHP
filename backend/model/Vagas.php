@@ -6,19 +6,22 @@ class Vaga implements JsonSerializable
     private ?string $descricao;
     private string $tipo;
     private string $status;
+    private ?int $criado_por;
 
     public function __construct(
         ?int $id = null,
         string $titulo = '',
         ?string $descricao = null,
         string $tipo = 'CLT',
-        string $status = 'active'
+        string $status = 'active',
+        ?int $criado_por = null
     ) {
         $this->id = $id;
         $this->titulo = $titulo;
         $this->descricao = $descricao;
         $this->tipo = $tipo;
         $this->status = $status;
+        $this->criado_por = $criado_por;
     }
 
     // Getters
@@ -42,6 +45,10 @@ class Vaga implements JsonSerializable
     {
         return $this->status;
     }
+    public function getCriadoPor(): ?int
+    {
+        return $this->criado_por;
+    }
 
     // Setters
     public function setId(?int $id): void
@@ -64,6 +71,10 @@ class Vaga implements JsonSerializable
     {
         $this->status = $status;
     }
+    public function setCriadoPor(?int $criado_por): void
+    {
+        $this->criado_por = $criado_por;
+    }
 
     public function jsonSerialize(): array
     {
@@ -72,7 +83,8 @@ class Vaga implements JsonSerializable
             'titulo' => $this->titulo,
             'descricao' => $this->descricao,
             'tipo' => $this->tipo,
-            'status' => $this->status
+            'status' => $this->status,
+            'criado_por' => $this->criado_por
         ];
     }
 }

@@ -1,15 +1,5 @@
-
 CREATE DATABASE IF NOT EXISTS recrutamento CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE recrutamento;
-
-
-CREATE TABLE vagas (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  titulo VARCHAR(255) NOT NULL,
-  descricao TEXT,
-  tipo ENUM('CLT','PJ','Freelancer') NOT NULL,
-  status ENUM('active','paused','closed') NOT NULL DEFAULT 'active'
-);
 
 CREATE TABLE candidatos (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -19,6 +9,17 @@ CREATE TABLE candidatos (
   token VARCHAR(255) DEFAULT NULL
 );
 
+CREATE TABLE vagas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(255) NOT NULL,
+  descricao TEXT,
+  tipo ENUM('CLT','PJ','Freelancer') NOT NULL,
+  status ENUM('active','paused','closed') NOT NULL DEFAULT 'active',
+  criado_por INT NULL,
+  CONSTRAINT fk_vaga_criador
+    FOREIGN KEY (criado_por) REFERENCES candidatos(id)
+    ON DELETE SET NULL
+);
 
 CREATE TABLE inscricoes (
   id INT AUTO_INCREMENT PRIMARY KEY,
