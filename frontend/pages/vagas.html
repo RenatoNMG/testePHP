@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vagas de Emprego</title>
+    <link rel="stylesheet" href="../styles/layouts/vagas.css">
+</head>
+<body>
+    <h1>Vagas de Emprego</h1>
+
+    <div class="controls">
+        <select>
+            <option value="">Todos os tipos</option>
+            <option value="CLT">CLT</option>
+            <option value="PJ">PJ</option>
+            <option value="Freelancer">Freelancer</option>
+        </select>
+        <select>
+            <option value="title-asc">Ordenar por título ↑</option>
+            <option value="title-desc">Ordenar por título ↓</option>
+        </select>
+        <button><a href="vagas-create.html">Anuncie uma vaga</a></button>
+        <button id="sair-button">Sair</button>
+
+    </div>
+
+    <div class="jobs-list">
+        <div class="job-card">
+            <div class="job-title">Desenvolvedor Front-End</div>
+            <div class="job-desc">Trabalhar com React, HTML, CSS e integração com APIs.</div>
+            <div class="job-type">CLT</div>
+            <button>Inscrever-se</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">Analista de Dados</div>
+            <div class="job-desc">Coletar, tratar e analisar dados de grandes volumes.</div>
+            <div class="job-type">PJ</div>
+            <button>Inscrever-se</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">Designer UX/UI</div>
+            <div class="job-desc">Criar interfaces intuitivas e protótipos de produtos.</div>
+            <div class="job-type">Freelancer</div>
+            <button>Inscrever-se</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">DevOps</div>
+            <div class="job-desc">Automatizar deploys, monitoramento e infraestrutura em nuvem.</div>
+            <div class="job-type">CLT</div>
+            <button>Inscrever-se</button>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button>5</button>
+    </div>
+    <script src="../scripts/vagas.js"></script>
+    
+</body>
+</html>

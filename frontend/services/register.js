@@ -38,10 +38,10 @@ cadastroForm.addEventListener('submit', (event) => {
         return response.json();
     })
     .then(data => {
-        console.log('Resposta da API:', data); // debug
+        
         if (data.success && data.token) {
             localStorage.setItem('token', data.token);
-            window.location.href = 'vagas.html';
+            window.location.href = '../pages/vagas.html';
         } else {
             alert('Erro no cadastro: ' + (data.message || 'Erro desconhecido'));
         }
