@@ -1,6 +1,14 @@
+const tipoSelect = document.querySelector("select"); // seu select de tipos
+
 async function carregarVagas(page = 1) {
     try {
-        const response = await fetch(`http://localhost:8080/api/vagas.php?page=${page}&limit=20`);
+        const tipo = tipoSelect.value; // pega o tipo selecionado
+        const url = new URL("http://localhost:8080/api/vagas.php");
+        url.searchParams.append("page", page);
+        url.searchParams.append("limit", 20);
+        if (tipo) url.searchParams.append("tipo", tipo); // adiciona filtro se selecionado
+
+        const response = await fetch(url);
         const result = await response.json();
 
         if (!result.success) {
@@ -25,7 +33,6 @@ async function carregarVagas(page = 1) {
             jobsList.appendChild(card);
         });
 
-        // Exemplo de paginação simples
         renderPaginacao(result.page, result.pages);
 
     } catch (error) {
@@ -48,12 +55,14 @@ function renderPaginacao(paginaAtual, totalPaginas) {
     }
 }
 
-// Exemplo de ação no botão Inscrever-se
 function inscrever(vagaId) {
     alert(`Você se inscreveu na vaga ID: ${vagaId}`);
 }
 
-// Chama na inicialização
+// Recarrega a lista ao mudar o filtro
+tipoSelect.addEventListener("change", () => carregarVagas(1));
+
+// Inicializa a lista
 document.addEventListener("DOMContentLoaded", () => {
     carregarVagas();
 });

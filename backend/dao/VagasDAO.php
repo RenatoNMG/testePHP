@@ -77,6 +77,7 @@ class VagaDAO
         return $row ? $this->mapVagaRow($row) : null;
     }
 
+    // paginas por tipo
     public function getPaginated(int $page = 1, int $limit = 20): array
     {
         $offset = ($page - 1) * $limit;
@@ -92,9 +93,36 @@ class VagaDAO
         return $result;
     }
 
+    // pegar total
     public function getTotal(): int
     {
         $stmt = $this->conn->query("SELECT COUNT(*) as total FROM vagas");
         return (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    // paginação por tipo
+    public function getPaginatedByTipo(string $tipo, int $page, int $limit): array
+    {
+        $offset = ($page - 1) * $limit;
+        $stmt = $this->conn->prepare("SELECT * FROM vagas WHERE tipo = :tipo ORDER BY titulo ASC LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':tipo', $tipo, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $this->mapVagaRow($row);
+        }
+        return $result;
+    }
+
+    // pegar o total de pagina
+    public function getTotalByTipo(string $tipo): int
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM vagas WHERE tipo = :tipo");
+        $stmt->bindValue(':tipo', $tipo, PDO::PARAM_STR);
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
     }
 }
