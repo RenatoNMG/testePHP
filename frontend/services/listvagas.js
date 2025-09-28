@@ -56,8 +56,38 @@ function renderPaginacao(paginaAtual, totalPaginas) {
 }
 
 function inscrever(vagaId) {
-    alert(`Você se inscreveu na vaga ID: ${vagaId}`);
+    const candidatoId = localStorage.getItem('candidato_id'); 
+
+    if (!candidatoId) {
+        alert('Usuário não encontrado.');
+        return;
+    }
+
+    fetch('http://localhost:8080/api/inscrever.php', { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            idVaga: vagaId,
+            idCandidato: candidatoId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Inscrição realizada com sucesso!');
+        } else {
+            alert('Erro ao se inscrever: ' + (data.message || 'Tente novamente.'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+        alert('Erro na conexão com a API.');
+    });
 }
+
+
 
 // Recarrega a lista ao mudar o filtro
 tipoSelect.addEventListener("change", () => carregarVagas(1));

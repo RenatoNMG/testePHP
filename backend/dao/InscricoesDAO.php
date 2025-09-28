@@ -1,6 +1,7 @@
+
+
+
 <?php
-require_once __DIR__ . "/../database/database.php";
-require_once __DIR__ . "/../model/Inscricoes.php";
 
 class InscricaoDAO
 {
