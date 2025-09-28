@@ -25,11 +25,9 @@ if (!$idCriador) {
 $dao = new VagaDAO();
 $vagas = $dao->getByCriadoPor($idCriador);
 
-// Filtra apenas vagas ativas
-$vagasAtivas = array_filter($vagas, fn($vaga) => $vaga->getStatus() === 'active');
 
 echo json_encode([
     'success' => true,
-    'total' => count($vagasAtivas),
-    'data' => array_values($vagasAtivas)
+    'total' => count($vagas),
+    'data' => array_values($vagas)
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

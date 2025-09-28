@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Vaga</title>
+    <link rel="stylesheet" href="../styles/layouts/vagas-create.css">
+</head>
+
+<body>
+    <div class="card">
+        <h1>Editar Vaga</h1>
+        <a href="minhas-vagas.html"><button>Voltar</button></a>
+
+        <form id="vaga-form">
+            <input type="text" name="titulo" placeholder="Título da vaga" required>
+            <textarea name="descricao" placeholder="Descrição da vaga"></textarea>
+            <select name="tipo" required>
+                <option value="">Selecione o tipo</option>
+                <option value="CLT">CLT</option>
+                <option value="PJ">PJ</option>
+                <option value="Freelancer">Freelancer</option>
+            </select>
+            <select name="status" required>
+                <option value="active">Ativa</option>
+                <option value="paused">Pausada</option>
+                <option value="closed">Fechada</option>
+            </select>
+            <button type="submit">Atualizar Vaga</button>
+        </form>
+    </div>
+
+    <script src="../scripts/auth.js"></script>
+    <script src="../services/vagas-edit.js"></script>
+</body>
+
+</html>
