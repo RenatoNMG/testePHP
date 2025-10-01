@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -26,6 +26,16 @@ $data = json_decode(file_get_contents('php://input'), true);
 $email = $data['email'] ?? '';
 $senha = $data['senha'] ?? '';
 
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    http_response_code(400);
+    echo json_encode([
+        "success" => false,
+        "message" => "Email inválido"
+    ]);
+    exit;
+}
+
 // Valida campos
 if (empty($email) || empty($senha)) {
     echo json_encode([
@@ -36,31 +46,30 @@ if (empty($email) || empty($senha)) {
 }
 
 // Verifica no banco
-$CandidatosDAO = new CandidatoDAO();
-$Candidato = $CandidatosDAO->getByEmail($email);
+try {
+    $CandidatosDAO = new CandidatoDAO();
+    $Candidato = $CandidatosDAO->getByEmail($email);
 
-if (!$Candidato) {
+    if (!$Candidato || !password_verify($senha, $Candidato->getSenha())) {
+        http_response_code(401);
+        echo json_encode([
+            "success" => false,
+            "message" => "Usuário ou senha incorretos"
+        ]);
+        exit;
+    }
+
+    $token = base64_encode($Candidato->getId() . ':' . bin2hex(random_bytes(16)));
+
+    echo json_encode([
+        "success" => true,
+        "token" => $token,
+        "id" => $Candidato->getId()
+    ]);
+} catch (Exception $e) {
+    http_response_code(500);
     echo json_encode([
         "success" => false,
-        "message" => "Usuário ou senha incorretos"
+        "message" => "Erro interno do servidor"
     ]);
-    exit;
 }
-
-// Verifica senha (assumindo que está armazenada com senha_hash)
-if (!password_verify($senha, $Candidato->getSenha())) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Usuário ou senha incorretos"
-    ]);
-    exit;
-}
-
-// Se estiver correto, gera token
-$token = base64_encode($Candidato->getId() . ':' . bin2hex(random_bytes(16)));
-
-echo json_encode([
-    "success" => true,
-    "token" => $token,
-    "id" => $Candidato->getId()
-]);

@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Origin: http://localhost:3000');
 header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Verifica se o id_criador foi passado na query string
+// Verifica o id
 $idCriador = isset($_GET['id_criador']) ? (int)$_GET['id_criador'] : null;
 
 if (!$idCriador) {
@@ -22,12 +22,19 @@ if (!$idCriador) {
     exit;
 }
 
-$dao = new VagaDAO();
-$vagas = $dao->getByCriadoPor($idCriador);
+try {
+    $dao = new VagaDAO();
+    $vagas = $dao->getByCriadoPor($idCriador);
 
-
-echo json_encode([
-    'success' => true,
-    'total' => count($vagas),
-    'data' => array_values($vagas)
-], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    echo json_encode([
+        'success' => true,
+        'total' => count($vagas),
+        'data' => array_values($vagas)
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro interno do servidor.'
+    ]);
+}

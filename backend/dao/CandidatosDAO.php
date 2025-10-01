@@ -106,4 +106,12 @@ class CandidatoDAO
             }
             return null;
     }
+
+    public function existsByEmail(string $email): bool {
+    $sql = "SELECT COUNT(*) FROM candidatos WHERE email = :email";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':email' => $email]);
+    return $stmt->fetchColumn() > 0;
+}
+
 }

@@ -1,7 +1,6 @@
 <?php
-
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
@@ -12,48 +11,53 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
 require_once __DIR__ . "/../database/database.php";
 require_once __DIR__ . "/../model/Vagas.php";
-require_once __DIR__ . "/../dao/VagasDAO.php"; 
+require_once __DIR__ . "/../dao/VagasDAO.php";
 
-// JSON do corpo
-$input = json_decode(file_get_contents("php://input"), true);
-
-if (!$input) {
+function sendResponse(int $code, bool $success, string $message, array $data = []) {
+    http_response_code($code);
     echo json_encode([
-        "success" => false,
-        "message" => "Nenhum dado enviado"
-    ]);
+        "success" => $success,
+        "message" => $message,
+        "data" => $data
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
+
+//validar JSON
+$input = json_decode(file_get_contents("php://input"), true);
+if ($input === null && json_last_error() !== JSON_ERROR_NONE) {
+    sendResponse(400, false, "JSON inválido.");
+}
+
 
 $tipo  = $input["tipo"]  ?? null;
 $order = $input["order"] ?? "title-asc";
 $limit = (int) ($input["limit"] ?? 10);
 $page  = (int) ($input["page"]  ?? 1);
 
+
+$limit = max(1, min($limit, 100));
+$page  = max(1, $page);
+
+$orderMap = [
+    "title-asc" => "titulo ASC",
+    "title-desc"=> "titulo DESC",
+    "id-asc"   => "id ASC",
+    "id-desc"  => "id DESC"
+];
+$orderBy = $orderMap[$order] ?? "titulo ASC";
+
 try {
     $vagaDAO = new VagaDAO();
 
-
-    $orderBy = "titulo ASC";
-    if ($order === "title-desc") {
-        $orderBy = "titulo DESC";
-    } elseif ($order === "id-asc") {
-        $orderBy = "id ASC";
-    } elseif ($order === "id-desc") {
-        $orderBy = "id DESC";
+    if ($tipo) {
+        $vagas = $vagaDAO->getPaginatedByTipo($tipo, $page, $limit, $orderBy) ?? [];
+        $total = $vagaDAO->getTotalByTipo($tipo);
+    } else {
+        $vagas = $vagaDAO->getPaginated($page, $limit, $orderBy) ?? [];
+        $total = $vagaDAO->getTotal();
     }
 
-
-if ($tipo) {
-    $vagas  = $vagaDAO->getPaginatedByTipo($tipo, $page, $limit, $orderBy);
-    $total  = $vagaDAO->getTotalByTipo($tipo);
-} else {
-    $vagas  = $vagaDAO->getPaginated($page, $limit, $orderBy);
-    $total  = $vagaDAO->getTotal();
-}
-
-
- 
     $response = [
         "success" => true,
         "pagination" => [
@@ -74,12 +78,9 @@ if ($tipo) {
         }, $vagas)
     ];
 
-    echo json_encode($response, JSON_PRETTY_PRINT);
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        "success" => false,
-        "message" => "Erro: " . $e->getMessage()
-    ]);
+
+    sendResponse(500, false, "Erro interno ao buscar vagas.");
 }

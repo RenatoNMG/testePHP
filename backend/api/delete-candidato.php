@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -30,28 +30,21 @@ if (isset($_POST['id_candidato'])) {
 // Agora tenta apagar
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id !== null) {
-        $dao = new CandidatoDAO();
-
-        if ($dao->delete($id)) {
-            echo json_encode([
-                "status" => "sucesso",
-                "mensagem" => "conta Deletada com Sucesso."
-            ]);
-        } else {
-            echo json_encode([
-                "status" => "erro",
-                "mensagem" => "Conta Não encontrada."
-            ]);
+        try {
+            $dao = new CandidatoDAO();
+            if ($dao->delete($id)) {
+                echo json_encode(["success" => true, "message" => "Conta deletada com sucesso."]);
+            } else {
+                echo json_encode(["success" => false, "message" => "Conta não encontrada."]);
+            }
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(["success" => false, "message" => "Erro interno do servidor."]);
         }
     } else {
-        echo json_encode([
-            "status" => "erro",
-            "mensagem" => "Conta Não encontrada."
-        ]);
+        echo json_encode(["success" => false, "message" => "Conta não encontrada."]);
     }
 } else {
-    echo json_encode([
-        "status" => "erro",
-        "mensagem" => "Erro no sistima methodo invalido."
-    ]);
+    echo json_encode(["success" => false, "message" => "Método inválido. Use POST."]);
 }
+

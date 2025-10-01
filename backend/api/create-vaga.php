@@ -1,5 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descricao = $data['descricao'] ?? null;
     $tipo = $data['tipo'] ?? 'CLT';
     $status = $data['status'] ?? 'active';
-    $criado_por = $data['criado_por'] ?? null; 
+    $criado_por = $data['criado_por'] ?? null;
 
     if (
         !$titulo || trim($titulo) === '' ||
@@ -33,16 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Cria a vaga com o ID do candidato que criou
     $vaga = new Vaga(null, $titulo, $descricao, $tipo, $status, $criado_por);
 
-    $dao = new VagaDAO();
-    $success = $dao->create($vaga);
 
-    if ($success) {
-        echo json_encode(['success' => true, 'message' => 'Vaga criada com sucesso.']);
-    } else {
+    try {
+        $dao = new VagaDAO();
+        $success = $dao->create($vaga);
+
+        if ($success) {
+            echo json_encode(['success' => true, 'message' => 'Vaga criada com sucesso.']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erro ao criar vaga.']);
+        }
+    } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Erro ao criar vaga.']);
+        echo json_encode(['success' => false, 'message' => 'Erro interno do servidor.']);
     }
-
 } else {
     http_response_code(405);
     echo json_encode(['error' => 'Método não permitido. Use POST.']);

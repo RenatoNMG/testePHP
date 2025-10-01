@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // Permite requisições do front-end
-header('Access-Control-Allow-Origin: *'); 
+header('Access-Control-Allow-Origin: http://localhost:3000'); 
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 
@@ -38,14 +38,20 @@ if (empty($nome) || empty($email) || empty($senha)) {
     ]);
     exit;
 }
+if (strlen($senha) < 6) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Senha deve ter no minimo 6 caracteres"
+    ]);
+    exit;
+}
 
-// Cria token aleatório
-$token = base64_encode(bin2hex(random_bytes(16)));
+$token = bin2hex(random_bytes(16));
+
 
 // Criptografa a senha
 $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-// Cria objeto Candidato
 $candidato = new Candidato();
 $candidato->setNome($nome);
 $candidato->setEmail($email);
@@ -53,19 +59,38 @@ $candidato->setSenha($senhaHash);
 $candidato->setToken($token);
 
 // Salva no banco
-$CandidatosDAO = new CandidatoDAO();
-if ($CandidatosDAO->create($candidato)) {
-    // Pega o ID gerado pelo banco
-    $candidatoId = $candidato->getId();
-    echo json_encode([
-        "success" => true,
-        "token" => $token,
-        "id" => $candidatoId
-    ]);
-}
- else {
+try {
+    $candidatosDAO = new CandidatoDAO();
+
+    // Verifica se o email já existe
+    if ($candidatosDAO->existsByEmail($email)) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Email já cadastrado"
+        ]);
+        exit;
+    }
+
+    // Cria candidato
+    if ($candidatosDAO->create($candidato)) {
+        $candidatoId = $candidato->getId();
+        echo json_encode([
+            "success" => true,
+            "token" => $token,
+            "id" => $candidatoId
+        ]);
+    } else {
+        echo json_encode([
+            "success" => false,
+            "message" => "Erro ao cadastrar candidato"
+        ]);
+    }
+} catch (Exception $e) {
+    http_response_code(500);
     echo json_encode([
         "success" => false,
-        "message" => "Erro ao cadastrar. Email já existe?"
+        "message" => "Erro interno do servidor"
     ]);
 }
+
+
