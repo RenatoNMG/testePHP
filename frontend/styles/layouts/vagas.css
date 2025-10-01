@@ -164,6 +164,97 @@ a {
     background-color: #0a84ff;
 }
 
+
+/* Card da vaga */
+.job-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.job-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Título da vaga */
+.job-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333333;
+}
+
+/* Descrição e tipo */
+.job-desc, .job-type, .job-status {
+    font-size: 0.95rem;
+    color: #555555;
+    margin-bottom: 6px;
+}
+
+/* Botões de ação */
+.job-actions {
+    margin-top: 10px;
+}
+
+.job-actions button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 6px;
+    transition: background-color 0.2s;
+}
+
+.job-actions .edit-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.job-actions .edit-btn:hover {
+    background-color: #45a049;
+}
+
+.job-actions .delete-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.job-actions .delete-btn:hover {
+    background-color: #e53935;
+}
+
+/* Lista de inscritos */
+.vaga-inscritos {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #2196F3;
+    border-radius: 4px;
+}
+
+.vaga-inscritos strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #2196F3;
+}
+
+.vaga-inscritos ul {
+    list-style: disc inside;
+    margin: 0;
+    padding-left: 0;
+}
+
+.vaga-inscritos li {
+    padding: 4px 0;
+    color: #333;
+    font-size: 0.95rem;
+}
 /* Responsividade */
 @media (max-width: 600px) {
     .controls {
@@ -182,4 +273,7 @@ a {
     .job-desc {
         font-size: 12px;
     }
+}
+.txc{
+    color: black;
 }

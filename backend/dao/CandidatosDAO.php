@@ -62,11 +62,13 @@ class CandidatoDAO
 
     // Excluir candidato
     public function delete(int $id): bool
-    {
-        $sql = "DELETE FROM candidatos WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([':id' => $id]);
-    }
+{
+    $sql = "DELETE FROM candidatos WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':id' => $id]);
+    return $stmt->rowCount() > 0;
+}
+
 
     // Listar todos os candidatos
     public function getAll(): array

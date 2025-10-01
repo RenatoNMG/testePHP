@@ -12,7 +12,6 @@ loginForm.addEventListener('submit', (event) => {
         senha: senha
     };
 
-    
 
     fetch(apiURL, {
         method: 'POST',

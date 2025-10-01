@@ -44,9 +44,8 @@ if (!$id || !is_numeric($id) || !$titulo || !$descricao || !$tipo || !$status ||
     exit;
 }
 
-// Cria objeto Vaga
+
 $vaga = new Vaga($id, $titulo, $descricao, $tipo, $status, $criado_por);
-// Atualiza no banco
 $dao = new VagaDAO();
 $updated = $dao->update($vaga);
 

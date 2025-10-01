@@ -102,4 +102,18 @@ class InscricaoDAO
         }
         return $result;
     }
+
+    public function getByCandidatoEVaga(int $candidato_id, int $vaga_id): ?Inscricao
+{
+    $sql = "SELECT * FROM inscricoes WHERE candidato_id = :candidato_id AND vaga_id = :vaga_id LIMIT 1";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        ':candidato_id' => $candidato_id,
+        ':vaga_id' => $vaga_id
+    ]);
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ? $this->mapInscricaoRow($row) : null;
+}
+
 }

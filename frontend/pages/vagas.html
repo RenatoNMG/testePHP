@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vagas de Emprego</title>
     <link rel="stylesheet" href="../styles/layouts/vagas.css">
 </head>
+
 <body>
     <h1>Vagas de Emprego</h1>
 
     <div class="controls">
-        <select>
+        <select id="tipo-select">
             <option value="">Todos os tipos</option>
             <option value="CLT">CLT</option>
             <option value="PJ">PJ</option>
             <option value="Freelancer">Freelancer</option>
         </select>
-        <select>
+
+        <select id="order-select">
             <option value="title-asc">Ordenar por título ↑</option>
             <option value="title-desc">Ordenar por título ↓</option>
         </select>
-        <button><a href="vagas-create.html">Anuncie uma vaga</a></button>
-        <button><a href="minhas-vagas.html">Minhas Vagas Anunciadas</a></button>
-        <button id="sair-button">Sair</button>
+
+        <select id="limit-select">
+            <option value="5">5 por página</option>
+            <option value="10">10 por página</option>
+            <option value="15">15 por página</option>
+            <option value="20" selected>20 por página</option>
+        </select>
+
 
     </div>
 
@@ -32,10 +40,16 @@
     </div>
 
     <div class="pagination">
-</div>
+    </div>
+    <button><a href="vagas-create.html">Anunciar uma vaga</a></button>
+    <button><a href="minhas-vagas.html">Minhas Vagas Anunciadas</a></button>
+    <button id="sair-button">Sair</button>
+    <button id="btnApagar">Apagar Minha Conta</button>
     <script src="../scripts/auth.js"></script>
     <script src="../services/sair.js"></script>
     <script src="../services/listvagas.js"></script>
-    
+    <script src="../services/deleteConta.js"></script>
+
 </body>
+
 </html>

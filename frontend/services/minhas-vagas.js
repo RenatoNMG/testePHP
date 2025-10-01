@@ -13,14 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             if (data.success && data.data.length > 0) {
-                jobsList.innerHTML = ""; // limpa o conteúdo inicial
+                jobsList.innerHTML = "";
 
                 data.data.forEach(vaga => {
                     const vagaCard = document.createElement("div");
                     vagaCard.classList.add("job-card");
 
-                    // Inclui o status no card
-                    vagaCard.innerHTML = `
+                    // Monta o HTML básico da vaga
+                    let html = `
                         <div class="job-title">${vaga.titulo}</div>
                         <div class="job-desc">${vaga.descricao}</div>
                         <div class="job-type">${vaga.tipo}</div>
@@ -31,6 +31,19 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     `;
 
+                    // Se houver inscrições
+                    if (vaga.inscricoes && vaga.inscricoes.length > 0) {
+                        html += `<div class="vaga-inscritos">
+                                    <strong>Inscritos na vaga:</strong>
+                                    
+                                    <ul>`;
+                        vaga.inscricoes.forEach(inscrito => {
+                            html += `<h5 class="txc">Contato</h5><li>${inscrito.nome} (${inscrito.email})</li>`;
+                        });
+                        html += `</ul></div>`;
+                    }
+
+                    vagaCard.innerHTML = html;
                     jobsList.appendChild(vagaCard);
                 });
             } else {
@@ -54,7 +67,7 @@ function apagarVaga(id) {
         fetch(`http://localhost:8080/api/delete-vaga.php`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: id }) // envia o ID no corpo
+            body: JSON.stringify({ id: id })
         })
         .then(res => res.json())
         .then(data => {

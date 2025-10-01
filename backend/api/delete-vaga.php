@@ -32,7 +32,7 @@ if (!$id || !is_numeric($id)) {
     http_response_code(400);
     echo json_encode([
         "success" => false,
-        "message" => "ID inválido ou não informado."
+        "message" => "ID invalido."
     ]);
     exit;
 }

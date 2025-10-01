@@ -1,47 +1,85 @@
 <?php
 
-header("Content-Type: application/json");
-header('Access-Control-Allow-Origin: *');
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     http_response_code(200);
     exit;
 }
 
-require_once __DIR__ . '/../database/database.php';
-require_once __DIR__ . '/../model/Vagas.php';
-require_once __DIR__ . '/../dao/VagasDAO.php';
+require_once __DIR__ . "/../database/database.php";
+require_once __DIR__ . "/../model/Vagas.php";
+require_once __DIR__ . "/../dao/VagasDAO.php"; 
 
-$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-$limit = 20;
-$tipo = $_GET['tipo'] ?? null;
+// JSON do corpo
+$input = json_decode(file_get_contents("php://input"), true);
 
-// Normaliza o filtro de tipo
-if ($tipo === "" || (is_string($tipo) && strtolower($tipo) === "todos")) {
-    $tipo = null;
+if (!$input) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Nenhum dado enviado"
+    ]);
+    exit;
 }
 
-$dao = new VagaDAO();
+$tipo  = $input["tipo"]  ?? null;
+$order = $input["order"] ?? "title-asc";
+$limit = (int) ($input["limit"] ?? 10);
+$page  = (int) ($input["page"]  ?? 1);
 
-// Pega todas as vagas da página usando funções existentes
-if ($tipo && in_array($tipo, ['CLT', 'PJ', 'Freelancer'])) {
-    $vagas = $dao->getPaginatedByTipo($tipo, $page, $limit);
-    $total = $dao->getTotalByTipo($tipo);
+try {
+    $vagaDAO = new VagaDAO();
+
+
+    $orderBy = "titulo ASC";
+    if ($order === "title-desc") {
+        $orderBy = "titulo DESC";
+    } elseif ($order === "id-asc") {
+        $orderBy = "id ASC";
+    } elseif ($order === "id-desc") {
+        $orderBy = "id DESC";
+    }
+
+
+if ($tipo) {
+    $vagas  = $vagaDAO->getPaginatedByTipo($tipo, $page, $limit, $orderBy);
+    $total  = $vagaDAO->getTotalByTipo($tipo);
 } else {
-    $vagas = $dao->getPaginated($page, $limit);
-    $total = $dao->getTotal();
+    $vagas  = $vagaDAO->getPaginated($page, $limit, $orderBy);
+    $total  = $vagaDAO->getTotal();
 }
 
-// Filtra apenas vagas ativas antes de enviar
-$vagasAtivas = array_filter($vagas, fn($vaga) => $vaga->getStatus() === 'active');
 
-echo json_encode([
-    'success' => true,
-    'page' => $page,
-    'limit' => $limit,
-    'total' => count($vagasAtivas),
-    'pages' => ceil(count($vagasAtivas) / $limit),
-    'data' => array_values($vagasAtivas) // reindexa o array
-], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+ 
+    $response = [
+        "success" => true,
+        "pagination" => [
+            "page" => $page,
+            "limit" => $limit,
+            "total" => $total,
+            "pages" => ceil($total / $limit)
+        ],
+        "data" => array_map(function($vaga) {
+            return [
+                "id" => $vaga->getId(),
+                "titulo" => $vaga->getTitulo(),
+                "descricao" => $vaga->getDescricao(),
+                "tipo" => $vaga->getTipo(),
+                "status" => $vaga->getStatus(),
+                "criado_por" => $vaga->getCriadoPor()
+            ];
+        }, $vagas)
+    ];
+
+    echo json_encode($response, JSON_PRETTY_PRINT);
+
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        "success" => false,
+        "message" => "Erro: " . $e->getMessage()
+    ]);
+}

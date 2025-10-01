@@ -1,8 +1,16 @@
 <?php
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+// Permitir qualquer origem
+header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
-header('Access-Control-Allow-Methods: POST');
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+
 
 require_once __DIR__ . "/../database/database.php";
 require_once __DIR__ . "/../model/Inscricoes.php";
@@ -22,6 +30,15 @@ if (empty($data['idVaga']) || empty($data['idCandidato'])) {
     exit;
 }
 
+$dao = new InscricaoDAO(); 
+
+// veirifcação se o usuario ja é incrito
+if ($dao->getByCandidatoEVaga($data['idCandidato'], $data['idVaga'])) {
+    echo json_encode(['success'=> false,'message'=> 'Voce jà é incrito nessa vaga']);
+    exit;
+}
+
+
 // Cria instância do modelo
 $inscricao = new Inscricao(
     null,
@@ -30,7 +47,7 @@ $inscricao = new Inscricao(
 );
 
 // Chama o DAO para salvar
-$dao = new InscricaoDAO(); // já deve conter a conexão PDO
+
 if ($dao->create($inscricao)) {
     echo json_encode(['success' => true, 'message' => 'Inscrição realizada com sucesso']);
 } else {
